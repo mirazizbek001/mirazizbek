@@ -19,6 +19,7 @@ if [ -z "${DATABASE_URL:-}" ]; then
     VOLUME_PATH="${INSTA_KIDS_DATA_PATH:-/tmp/instakids-data}"
     mkdir -p "$VOLUME_PATH/media"
     export INSTA_KIDS_DATA_PATH="$VOLUME_PATH"
+    unset RAILWAY_VOLUME_MOUNT_PATH
     echo "[Bon-Bon] WARNING: DATABASE_URL yoki Railway Volume yo'q."
     echo "[Bon-Bon] Vaqtinchalik SQLite ishlatiladi; deploy yoki restartda ma'lumotlar yo'qolishi mumkin."
   fi
