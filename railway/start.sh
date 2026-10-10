@@ -16,10 +16,11 @@ if [ -z "${DATABASE_URL:-}" ]; then
       cp /app/db.sqlite3 "$VOLUME_PATH/db.sqlite3"
     fi
   else
-    echo "[Bon-Bon] ERROR: doimiy saqlash sozlanmagan."
-    echo "[Bon-Bon] Railway PostgreSQL xizmatini ulang (DATABASE_URL) yoki /data ga Railway Volume ulang."
-    echo "[Bon-Bon] Ma'lumotlar yo'qolmasligi uchun vaqtinchalik /tmp SQLite bilan ishga tushirish bekor qilindi."
-    exit 1
+    VOLUME_PATH="${INSTA_KIDS_DATA_PATH:-/tmp/instakids-data}"
+    mkdir -p "$VOLUME_PATH/media"
+    export INSTA_KIDS_DATA_PATH="$VOLUME_PATH"
+    echo "[Bon-Bon] WARNING: DATABASE_URL yoki Railway Volume yo'q."
+    echo "[Bon-Bon] Vaqtinchalik SQLite ishlatiladi; deploy yoki restartda ma'lumotlar yo'qolishi mumkin."
   fi
 fi
 
