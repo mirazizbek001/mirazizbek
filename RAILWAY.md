@@ -52,7 +52,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Ko‘rsatilgan database PostgreSQL bo‘lishi yoki `/data/db.sqlite3` Volume ichida joylashishi kerak. Railway production'da doimiy storage bo‘lmasa, startup ataylab xato bilan to‘xtaydi.
+Ko‘rsatilgan database PostgreSQL bo‘lishi yoki `/data/db.sqlite3` Volume ichida joylashishi kerak. Doimiy storage bo‘lmasa, ilova vaqtinchalik SQLite bilan ishga tushadi, ammo restart yoki redeploy'da ma'lumotlar yo‘qolishi mumkin.
 
 Ilova ichidagi boshqaruv paneli `/admin` manzilida, Django’ning texnik admin paneli esa `/django-admin/` manzilida ochiladi.
 
