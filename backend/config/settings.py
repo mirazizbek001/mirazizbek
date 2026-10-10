@@ -22,9 +22,6 @@ def _volume_mount_path():
     configured_path = os.getenv('RAILWAY_VOLUME_MOUNT_PATH', '').strip()
     if configured_path:
         return Path(configured_path)
-    default_path = Path('/data')
-    if default_path.is_dir() and os.access(default_path, os.W_OK):
-        return default_path
     return None
 
 

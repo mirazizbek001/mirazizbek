@@ -3,12 +3,14 @@ set -eu
 
 : "${PORT:=8080}"
 
-# If Railway has a Volume mounted at /data, use it automatically.
 # If DATABASE_URL is supplied, Django uses PostgreSQL instead.
-# If neither is available, keep the app bootable by falling back to writable local storage.
 if [ -z "${DATABASE_URL:-}" ]; then
-  VOLUME_PATH="${RAILWAY_VOLUME_MOUNT_PATH:-/data}"
-  if [ -d "$VOLUME_PATH" ] && [ -w "$VOLUME_PATH" ]; then
+  if [ -n "${RAILWAY_VOLUME_MOUNT_PATH:-}" ]; then
+    VOLUME_PATH="$RAILWAY_VOLUME_MOUNT_PATH"
+    if [ ! -d "$VOLUME_PATH" ] || [ ! -w "$VOLUME_PATH" ]; then
+      echo "[Bon-Bon] ERROR: Railway Volume yo'li mavjud emas yoki yozish uchun ruxsat yo'q: $VOLUME_PATH" >&2
+      exit 1
+    fi
     export RAILWAY_VOLUME_MOUNT_PATH="$VOLUME_PATH"
     mkdir -p "$VOLUME_PATH/media"
     if [ ! -f "$VOLUME_PATH/db.sqlite3" ] && [ -f /app/db.sqlite3 ]; then
@@ -16,12 +18,14 @@ if [ -z "${DATABASE_URL:-}" ]; then
       cp /app/db.sqlite3 "$VOLUME_PATH/db.sqlite3"
     fi
   else
+    if [ -n "${RAILWAY_ENVIRONMENT:-}${RAILWAY_PROJECT_ID:-}${RAILWAY_SERVICE_ID:-}" ]; then
+      echo "[Bon-Bon] ERROR: Railway production uchun doimiy database sozlanmagan." >&2
+      echo "[Bon-Bon] PostgreSQL DATABASE_URL ni ulang yoki Railway Volume'ni /data ga mount qiling." >&2
+      exit 1
+    fi
     VOLUME_PATH="${INSTA_KIDS_DATA_PATH:-/tmp/instakids-data}"
     mkdir -p "$VOLUME_PATH/media"
     export INSTA_KIDS_DATA_PATH="$VOLUME_PATH"
-    unset RAILWAY_VOLUME_MOUNT_PATH
-    echo "[Bon-Bon] WARNING: DATABASE_URL yoki Railway Volume yo'q."
-    echo "[Bon-Bon] Vaqtinchalik SQLite ishlatiladi; deploy yoki restartda ma'lumotlar yo'qolishi mumkin."
   fi
 fi
 

@@ -20,6 +20,7 @@ def health(request):
 
 urlpatterns = [
     path('', health, name='root-health'),
+    path('health', health, name='health-no-trailing-slash'),
     path('health/', health, name='health'),
     path('django-admin/', admin.site.urls),
     path('plat/', include('plat.urls')),

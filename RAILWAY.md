@@ -7,25 +7,26 @@ Bu versiya frontend va backendni **bitta Railway service** ichida ishlatadi. `/p
 1. GitHub repo root'ini Railway'ga ulang.
 2. Root Directory'ni o‘zgartirmang.
 3. Root'dagi `Dockerfile` avtomatik ishlatiladi.
-4. Doimiy ma’lumotlar uchun Railway Volume qo‘shib, mount path’ni `/data` qiling. Bu imkoniyat bo‘lmasa, service vaqtinchalik SQLite bazasi bilan ham ishga tushadi.
+4. **PostgreSQL tavsiya qilinadi:** Railway loyihasiga PostgreSQL qo‘shib, web service Variables bo‘limida uning `DATABASE_URL` qiymatini ulang.
+5. Muqobil: Railway Volume yarating va web service'ga `/data` manziliga ulang.
 
-Volume yoki PostgreSQL `DATABASE_URL` bo‘lmasa, ilova `/tmp/instakids-data` dagi vaqtinchalik bazadan foydalanadi. Akkauntlar, xabarlar va media deploy yoki container almashtirilganda yo‘qolishi mumkin. Doimiy saqlash uchun Volume yoki PostgreSQL tavsiya qilinadi. Oldingi deploylarda yo‘qolgan ma’lumotlarni bu o‘zgarish tiklay olmaydi; ularni faqat mavjud backup yoki eski persistent bazadan qaytarish mumkin.
+Railway production'da PostgreSQL yoki Volume sozlanmagan bo‘lsa, ilova endi vaqtinchalik SQLite bilan ishga tushmaydi. Deploy logida sozlash bo‘yicha aniq xabar chiqadi. Bu akkauntlar, xabarlar va media vaqtinchalik bazada saqlanib, keyingi deployda yo‘qolishining oldini oladi.
 
 ## 2. Variables
 
 ```text
 DEBUG=0
 SECRET_KEY=<uzun-maxfiy-key>
+DATABASE_URL=${{Postgres.DATABASE_URL}}
 ```
+
+`DATABASE_URL` PostgreSQL xizmatiga Railway reference variable sifatida ulangan bo‘lishi kerak. PostgreSQL o‘rniga Volume ishlatsangiz `DATABASE_URL` shart emas, lekin Volume mount path `/data` bo‘lsin.
 
 Ixtiyoriy:
 
 ```text
-DATABASE_URL=${{Postgres.DATABASE_URL}}
 GOOGLE_CLIENT_ID=<Google OAuth client id>
 ```
-
-`DATABASE_URL` bo‘lsa PostgreSQL ishlatiladi. Volume `/data` ga ulangan bo‘lsa `/data/db.sqlite3`, aks holda `/tmp/instakids-data/db.sqlite3` ishlatiladi.
 
 ## 3. Health check
 
@@ -36,7 +37,7 @@ https://SIZNING-DOMENINGIZ/health
 Javobda:
 
 ```json
-{"status":"ok","database":"sqlite3","data_persistent":false}
+{"status":"ok","database":"postgresql","data_persistent":true}
 ```
 
 bo‘lishi kerak.
@@ -51,7 +52,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Ko‘rsatilgan database yo‘li Railway app ishlatayotgan baza bilan bir xil bo‘lishi kerak. `DATABASE_URL` yoki `/data` Volume sozlanmaganida ma’lumotlar deploy/restartda yo‘qolishi mumkinligi haqidagi ogohlantirish qoladi; bu buyruq xatosi emas.
+Ko‘rsatilgan database PostgreSQL bo‘lishi yoki `/data/db.sqlite3` Volume ichida joylashishi kerak. Railway production'da doimiy storage bo‘lmasa, startup ataylab xato bilan to‘xtaydi.
 
 Ilova ichidagi boshqaruv paneli `/admin` manzilida, Django’ning texnik admin paneli esa `/django-admin/` manzilida ochiladi.
 
@@ -64,4 +65,4 @@ Ilova ichidagi boshqaruv paneli `/admin` manzilida, Django’ning texnik admin p
 - Yozishmalar `SocialState` orqali server database'ida saqlanadi.
 - Railway Volume `/data` akkauntlar, sessionlar, yozishmalar va media uchun persistent storage beradi.
 - PostgreSQL ishlatilsa web service uchun SQLite Volume shart emas; media uchun Volume yoki object storage kerak.
-- `DATABASE_URL` ham, `/data` Volume ham bo‘lmasa, app vaqtinchalik SQLite bazasida ishga tushadi; ma’lumotlar deploy/container almashtirilganda yo‘qolishi mumkin.
+- PostgreSQL yoki `/data` Volume bo‘lmasa, Railway production deploy'i vaqtinchalik SQLite o‘rniga startup xatosi bilan to‘xtaydi.
