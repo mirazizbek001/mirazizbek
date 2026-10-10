@@ -224,11 +224,6 @@ MEDIA_ROOT = DATA_STORAGE_PATH / 'media'
 
 # Ma'lumot deploydan keyin saqlanib qoladimi? (Postgres yoki Volume bo'lsa — ha)
 DATA_PERSISTENT = bool(os.getenv('DATABASE_URL', '').strip() or VOLUME_MOUNT_PATH)
-if not DATA_PERSISTENT and not DEBUG:
-    import logging
-    logging.getLogger('django').warning(
-        "DIQQAT: DATABASE_URL ham, Railway Volume ham yo'q — ma'lumotlar har deployda O'CHIB KETADI!"
-    )
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
