@@ -27,8 +27,10 @@ fi
 
 if [ -n "${DATABASE_URL:-}" ]; then
   echo "[Bon-Bon] Database: PostgreSQL"
-else
+elif [ -n "${RAILWAY_VOLUME_MOUNT_PATH:-}" ]; then
   echo "[Bon-Bon] Database: SQLite on persistent Railway Volume (${RAILWAY_VOLUME_MOUNT_PATH})"
+else
+  echo "[Bon-Bon] Database: Temporary SQLite (${INSTA_KIDS_DATA_PATH})"
 fi
 
 python manage.py migrate --noinput
