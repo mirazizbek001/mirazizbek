@@ -10,7 +10,7 @@ Bu versiya frontend va backendni **bitta Railway service** ichida ishlatadi. `/p
 4. **PostgreSQL tavsiya qilinadi:** Railway loyihasiga PostgreSQL qo‘shib, web service Variables bo‘limida uning `DATABASE_URL` qiymatini ulang.
 5. Muqobil: Railway Volume yarating va web service'ga `/data` manziliga ulang.
 
-Railway production'da PostgreSQL yoki Volume sozlanmagan bo‘lsa, ilova endi vaqtinchalik SQLite bilan ishga tushmaydi. Deploy logida sozlash bo‘yicha aniq xabar chiqadi. Bu akkauntlar, xabarlar va media vaqtinchalik bazada saqlanib, keyingi deployda yo‘qolishining oldini oladi.
+Railway production'da PostgreSQL yoki Volume sozlanmagan bo‘lsa, ilova vaqtinchalik SQLite bilan ishga tushadi va deploy logida ogohlantirish chiqaradi. Bu holatda ma'lumotlar restart yoki redeploy'da yo‘qolishi mumkin; doimiy saqlash uchun PostgreSQL yoki `/data` Volume ulang.
 
 ## 2. Variables
 
@@ -65,4 +65,4 @@ Ilova ichidagi boshqaruv paneli `/admin` manzilida, Django’ning texnik admin p
 - Yozishmalar `SocialState` orqali server database'ida saqlanadi.
 - Railway Volume `/data` akkauntlar, sessionlar, yozishmalar va media uchun persistent storage beradi.
 - PostgreSQL ishlatilsa web service uchun SQLite Volume shart emas; media uchun Volume yoki object storage kerak.
-- PostgreSQL yoki `/data` Volume bo‘lmasa, Railway production deploy'i vaqtinchalik SQLite o‘rniga startup xatosi bilan to‘xtaydi.
+- PostgreSQL yoki `/data` Volume bo‘lmasa, vaqtinchalik SQLite ishlaydi va ma'lumotlar yo‘qolishi mumkinligi haqida ogohlantirish chiqadi.

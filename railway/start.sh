@@ -19,9 +19,9 @@ if [ -z "${DATABASE_URL:-}" ]; then
     fi
   else
     if [ -n "${RAILWAY_ENVIRONMENT:-}${RAILWAY_PROJECT_ID:-}${RAILWAY_SERVICE_ID:-}" ]; then
-      echo "[Bon-Bon] ERROR: Railway production uchun doimiy database sozlanmagan." >&2
-      echo "[Bon-Bon] PostgreSQL DATABASE_URL ni ulang yoki Railway Volume'ni /data ga mount qiling." >&2
-      exit 1
+      echo "[Bon-Bon] WARNING: Railway production uchun doimiy database sozlanmagan." >&2
+      echo "[Bon-Bon] Vaqtinchalik SQLite ishlatiladi; restart yoki redeploy'da ma'lumotlar yo'qolishi mumkin." >&2
+      echo "[Bon-Bon] Doimiy saqlash uchun PostgreSQL DATABASE_URL ni ulang yoki Railway Volume'ni /data ga mount qiling." >&2
     fi
     VOLUME_PATH="${INSTA_KIDS_DATA_PATH:-/tmp/instakids-data}"
     mkdir -p "$VOLUME_PATH/media"

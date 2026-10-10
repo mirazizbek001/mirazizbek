@@ -16,6 +16,6 @@ This repository root is the **whole project**. Deploy this root with Railway's D
 4. Set `SECRET_KEY` to a long random value.
 5. Open `/health` after deployment.
 
-Railway production requires PostgreSQL or a Volume mounted at `/data`. If neither is configured, startup stops with an actionable error instead of using temporary SQLite and risking data loss.
+PostgreSQL or a Volume mounted at `/data` is recommended for Railway production. If neither is configured, the app starts with temporary SQLite and logs a warning; data may be lost on restart or redeploy.
 
 Do not commit `backend/db.sqlite3`; production data belongs in the Railway Volume or PostgreSQL.

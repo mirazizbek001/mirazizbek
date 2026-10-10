@@ -3,7 +3,7 @@
 ## Nimalar tuzatildi
 - Serverdagi Django sessiyalari ma'lumotlar bazasida saqlanadi va brauzer yopilganda tugamaydi.
 - Sinxronlash paytida serverda hali bo'lmagan joriy foydalanuvchining lokal post/Reels/Storylari avtomatik ravishda o'chirib yuborilmaydi; ular serverga qayta yuboriladi.
-- Railway'da doimiy baza sozlanmagan bo'lsa, loyiha vaqtinchalik `/tmp` bazada jim ishlash o'rniga ishga tushishni to'xtatadi. Bu yangi deploydan keyin ma'lumotlar yo'qolayotgandek ko'rinishining oldini oladi.
+- Railway'da doimiy baza sozlanmagan bo'lsa, loyiha vaqtinchalik `/tmp` SQLite bilan ishga tushadi va deploy logida ma'lumotlar yo'qolishi mumkinligi haqida ogohlantiradi.
 - Dizayn va sahifalar o'zgartirilmadi.
 
 ## Railway'da majburiy sozlash
@@ -18,7 +18,7 @@
 **Muhim:** Agar oldingi deployda SQLite `/tmp` ichida bo'lgan bo'lsa, u yerdagi avvalgi post/Reelslar qayta ishga tushganda tiklanmasligi mumkin. Eski ma'lumotlar bor Railway volume yoki `db.sqlite3` fayli bo'lsa, PostgreSQL'ga ko'chirishni alohida bajaring. Ushbu kod eski SQLite ma'lumotlarini o'z-o'zidan PostgreSQL'ga ko'chirmaydi.
 
 ## Muqobil
-PostgreSQL o'rniga Railway Volume'ni `/data` manziliga ulang. SQLite faqat shu doimiy volume ichida saqlansa, deploylar orasida saqlanadi. Ko'p foydalanuvchili production uchun PostgreSQL tavsiya qilinadi. PostgreSQL yoki Volume ulanmagan bo'lsa, Railway startup'i endi vaqtinchalik bazada ishlash o'rniga tushunarli xabar bilan to'xtaydi.
+PostgreSQL o'rniga Railway Volume'ni `/data` manziliga ulang. SQLite faqat shu doimiy volume ichida saqlansa, deploylar orasida saqlanadi. Ko'p foydalanuvchili production uchun PostgreSQL tavsiya qilinadi. PostgreSQL yoki Volume ulanmagan bo'lsa, vaqtinchalik baza ishlaydi, lekin undagi ma'lumotlar restart yoki redeploy'da yo'qolishi mumkin.
 
 ## Tekshiruv
 Frontend build bu muhitda to'liq yakunlanmadi: ZIP ichidagi `node_modules` Linux native Vite/Rolldown binding'ini o'z ichiga olmaydi. Railway Docker build `npm ci` orqali bog'liqliklarni toza o'rnatishi kerak. Deploydan keyin yuqoridagi amaliy testlarni bajaring.
